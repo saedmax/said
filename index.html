@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Sentence Builder — Learn English Sentences</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Sentence Builder</h1>
+      <p class="subtitle">Tap a word to swap it. Watch the meaning, translation, and picture change.</p>
+    </header>
+
+    <nav class="sentence-tabs" id="sentenceTabs" role="tablist" aria-label="Choose a sentence"></nav>
+
+    <main class="card">
+      <section class="tiles" id="tiles" aria-label="Sentence word tiles"></section>
+
+      <p class="preview" id="preview"></p>
+
+      <section class="scene" id="scene" aria-label="Illustration of the current sentence"></section>
+
+      <section class="translation" id="translation" dir="rtl" lang="ar" aria-label="Arabic translation"></section>
+
+      <div class="actions">
+        <button id="speakBtn" class="icon-btn" title="Play sentence" aria-label="Play sentence">🔊 Listen</button>
+        <button id="shuffleBtn" class="icon-btn" title="Randomize words" aria-label="Randomize words">🎲 Shuffle</button>
+        <button id="resetBtn" class="icon-btn" title="Reset to original" aria-label="Reset to original">↺ Reset</button>
+      </div>
+    </main>
+
+    <footer class="hint">Tap any highlighted word to open its alternatives.</footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
