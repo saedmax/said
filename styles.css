@@ -89,34 +89,54 @@ body {
 
 .tile-wrap {
   position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  background: var(--tile);
+  border: 1.5px solid var(--tile-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color .15s, background .15s;
+}
+
+.tile-wrap:hover {
+  border-color: var(--accent);
+}
+
+.tile-wrap.open {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.tile-wrap.changed {
+  animation: pop .25s ease;
 }
 
 .tile {
-  background: var(--tile);
-  border: 1.5px solid var(--tile-border);
+  background: none;
+  border: none;
   color: var(--text);
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 10px 8px 10px 14px;
   font-size: 16px;
   cursor: pointer;
-  transition: border-color .15s, transform .1s, background .15s;
-}
-
-.tile:hover {
-  border-color: var(--accent);
 }
 
 .tile:active {
   transform: scale(0.97);
 }
 
-.tile.open {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+.tile-speak {
+  background: none;
+  border: none;
+  border-left: 1px solid var(--tile-border);
+  color: var(--muted);
+  padding: 10px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
 }
 
-.tile.changed {
-  animation: pop .25s ease;
+.tile-speak:hover {
+  color: var(--accent);
 }
 
 @keyframes pop {
@@ -145,9 +165,19 @@ body {
   overflow: hidden;
 }
 
-.options button {
+.option-row {
+  display: flex;
+  align-items: stretch;
+}
+
+.option-row:hover,
+.option-row:focus-within {
+  background: var(--accent-soft);
+}
+
+.options button.option-word {
   display: block;
-  width: 100%;
+  flex: 1;
   text-align: left;
   background: none;
   border: none;
@@ -157,14 +187,23 @@ body {
   cursor: pointer;
 }
 
-.options button:hover,
-.options button:focus {
-  background: var(--accent-soft);
-}
-
-.options button.selected {
+.options button.option-word.selected {
   color: var(--accent);
   font-weight: 600;
+}
+
+.options button.option-speak {
+  background: none;
+  border: none;
+  border-left: 1px solid var(--tile-border);
+  color: var(--muted);
+  padding: 10px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.options button.option-speak:hover {
+  color: var(--accent);
 }
 
 .preview {
@@ -219,6 +258,13 @@ body {
 
 .icon-btn:hover {
   border-color: var(--accent);
+}
+
+.icon-btn.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
 }
 
 .hint {

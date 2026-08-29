@@ -129,6 +129,7 @@ const SENTENCES = [
 const state = {
   sentenceId: SENTENCES[0].id,
   choices: {}, // sentenceId -> array of selected option indices
+  slow: false,
 };
 
 for (const s of SENTENCES) {
@@ -141,8 +142,21 @@ const previewEl = document.getElementById("preview");
 const sceneEl = document.getElementById("scene");
 const translationEl = document.getElementById("translation");
 const speakBtn = document.getElementById("speakBtn");
+const slowBtn = document.getElementById("slowBtn");
 const shuffleBtn = document.getElementById("shuffleBtn");
 const resetBtn = document.getElementById("resetBtn");
+
+function speak(text) {
+  if (!("speechSynthesis" in window)) {
+    alert("Speech playback isn't supported in this browser.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = state.slow ? 0.7 : 1;
+  window.speechSynthesis.speak(utterance);
+}
 
 function currentSentence() {
   return SENTENCES.find((s) => s.id === state.sentenceId);
@@ -185,6 +199,7 @@ function renderTiles() {
   s.slots.forEach((options, slotIndex) => {
     const wrap = document.createElement("span");
     wrap.className = "tile-wrap";
+    if (openDropdownSlot === slotIndex) wrap.classList.add("open");
 
     const tile = document.createElement("button");
     tile.type = "button";
@@ -192,7 +207,6 @@ function renderTiles() {
     tile.textContent = options[idxs[slotIndex]].en;
     tile.setAttribute("aria-haspopup", "listbox");
     tile.setAttribute("aria-expanded", String(openDropdownSlot === slotIndex));
-    if (openDropdownSlot === slotIndex) tile.classList.add("open");
 
     tile.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -200,15 +214,31 @@ function renderTiles() {
       renderTiles();
     });
 
+    const speakTileBtn = document.createElement("button");
+    speakTileBtn.type = "button";
+    speakTileBtn.className = "tile-speak";
+    speakTileBtn.textContent = "🔊";
+    speakTileBtn.title = "Hear this word";
+    speakTileBtn.setAttribute("aria-label", "Hear this word");
+    speakTileBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      speak(options[idxs[slotIndex]].en);
+    });
+
     wrap.appendChild(tile);
+    wrap.appendChild(speakTileBtn);
 
     if (openDropdownSlot === slotIndex) {
       const menu = document.createElement("div");
       menu.className = "options";
       menu.setAttribute("role", "listbox");
       options.forEach((opt, optIndex) => {
+        const row = document.createElement("div");
+        row.className = "option-row";
+
         const optBtn = document.createElement("button");
         optBtn.type = "button";
+        optBtn.className = "option-word";
         optBtn.textContent = opt.en;
         optBtn.role = "option";
         if (optIndex === idxs[slotIndex]) optBtn.classList.add("selected");
@@ -223,7 +253,21 @@ function renderTiles() {
           renderTranslation();
           if (changed) flashTile(slotIndex);
         });
-        menu.appendChild(optBtn);
+
+        const optSpeakBtn = document.createElement("button");
+        optSpeakBtn.type = "button";
+        optSpeakBtn.className = "option-speak";
+        optSpeakBtn.textContent = "🔊";
+        optSpeakBtn.title = "Hear this word";
+        optSpeakBtn.setAttribute("aria-label", "Hear this word");
+        optSpeakBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          speak(opt.en);
+        });
+
+        row.appendChild(optBtn);
+        row.appendChild(optSpeakBtn);
+        menu.appendChild(row);
       });
       wrap.appendChild(menu);
     }
@@ -242,12 +286,12 @@ function renderTiles() {
 
 function flashTile(slotIndex) {
   const wraps = tilesEl.querySelectorAll(".tile-wrap");
-  const tile = wraps[slotIndex]?.querySelector(".tile");
-  if (!tile) return;
-  tile.classList.remove("changed");
+  const wrap = wraps[slotIndex];
+  if (!wrap) return;
+  wrap.classList.remove("changed");
   // Force reflow so the animation restarts.
-  void tile.offsetWidth;
-  tile.classList.add("changed");
+  void wrap.offsetWidth;
+  wrap.classList.add("changed");
 }
 
 function renderPreview() {
@@ -284,15 +328,13 @@ document.addEventListener("click", () => {
 
 speakBtn.addEventListener("click", () => {
   const s = currentSentence();
-  const text = s.joinEN(currentSelection());
-  if (!("speechSynthesis" in window)) {
-    alert("Speech playback isn't supported in this browser.");
-    return;
-  }
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  window.speechSynthesis.speak(utterance);
+  speak(s.joinEN(currentSelection()));
+});
+
+slowBtn.addEventListener("click", () => {
+  state.slow = !state.slow;
+  slowBtn.classList.toggle("active", state.slow);
+  slowBtn.setAttribute("aria-pressed", String(state.slow));
 });
 
 shuffleBtn.addEventListener("click", () => {
