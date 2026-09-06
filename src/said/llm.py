@@ -33,3 +33,15 @@ def extract_text(response) -> str:
         else:
             parts.append(str(block))
     return "".join(parts)
+
+
+def translate_query(query: str, target_language: str) -> str:
+    """Translate a search query into another language for multilingual search."""
+    llm = get_llm()
+    prompt = (
+        f"Translate the following research query into {target_language}. "
+        "Return only the translated text with no explanation, quotes, or extra "
+        f"commentary.\n\nQuery: {query}"
+    )
+    response = llm.invoke(prompt)
+    return extract_text(response).strip()

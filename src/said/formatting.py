@@ -6,8 +6,9 @@ def format_results(results: list[dict]) -> str:
         return "(none)"
     lines = []
     for r in results:
+        source = r.get("source") or "?"
         title = r.get("title") or "(no title)"
         url = r.get("url") or ""
         summary = (r.get("summary") or "")[:400]
-        lines.append(f"- {title} ({url})\n  {summary}")
+        lines.append(f"- [{source}] {title} ({url})\n  {summary}")
     return "\n".join(lines)

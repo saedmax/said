@@ -11,7 +11,8 @@ Recall Agent            (بحث دلالي عن أبحاث سابقة ذات ص�
        ▼
 Research Manager
        │
-       ├── Web Research Agent        (DuckDuckGo)
+       ├── Web Research Agent        (DuckDuckGo، إنجليزي)
+       ├── Web Research Agent (中文)  (يترجم السؤال للصينية عبر Gemini ثم يبحث)
        ├── Scientific Papers Agent   (arXiv + Semantic Scholar + Crossref)
        └── Patent Agent              (Google Patents عبر SerpApi — اختياري)
                     │
@@ -76,6 +77,14 @@ GEMINI_MODEL=gemini-2.5-flash
 
 `SERPAPI_API_KEY` اختياري: بدونه يرجع Patent Agent ملاحظة أن بحث البراءات غير مفعّل
 بدل الفشل.
+
+## البحث متعدد اللغات
+
+كل تشغيلة تبحث بالإنجليزي والصيني بالتوازي — وكيل الصيني يترجم السؤال أول عبر Gemini
+ثم يبحث بمنطقة `cn-zh` (نتائجه توسم بـ `web_zh`). إضافة لغة جديدة بسيطة: افتح
+`src/said/agents/multilingual_web_agent.py` وأضف سطر واحد يستدعي `make_web_agent_node`
+باسم اللغة ورمز منطقة DuckDuckGo (مثلًا `sa-ar` للعربي) ورمز مصدر مميز، ثم اربطه بالـ
+graph بنفس طريقة `web_agent_zh`. كل استدعاء ترجمة يستهلك طلب Gemini إضافي.
 
 ## أول بحث تجريبي
 
