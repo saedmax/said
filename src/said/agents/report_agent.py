@@ -1,6 +1,6 @@
 """Report generator agent: writes the final markdown report."""
 
-from said.llm import get_llm
+from said.llm import extract_text, get_llm
 from said.state import ResearchState
 
 REPORT_PROMPT = """Write a final research report in markdown for the query: "{query}".
@@ -18,4 +18,4 @@ def report_agent_node(state: ResearchState) -> dict:
     llm = get_llm()
     prompt = REPORT_PROMPT.format(query=state["query"], analysis=state.get("analysis", ""))
     response = llm.invoke(prompt)
-    return {"report": response.content}
+    return {"report": extract_text(response)}

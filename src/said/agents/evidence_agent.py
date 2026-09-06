@@ -1,7 +1,7 @@
 """Evidence/verification agent: dedupes and sanity-checks raw results."""
 
 from said.formatting import format_results
-from said.llm import get_llm
+from said.llm import extract_text, get_llm
 from said.state import ResearchState
 
 EVIDENCE_PROMPT = """You are an evidence verification agent for a scientific research assistant.
@@ -36,4 +36,4 @@ def evidence_agent_node(state: ResearchState) -> dict:
         patents=format_results(state.get("patent_results", [])),
     )
     response = llm.invoke(prompt)
-    return {"evidence": response.content}
+    return {"evidence": extract_text(response)}

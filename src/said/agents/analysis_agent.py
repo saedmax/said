@@ -1,6 +1,6 @@
 """Analysis agent: synthesizes verified evidence into a structured analysis."""
 
-from said.llm import get_llm
+from said.llm import extract_text, get_llm
 from said.state import ResearchState
 
 ANALYSIS_PROMPT = """You are a senior research analyst. Given the verified evidence below about the
@@ -21,4 +21,4 @@ def analysis_agent_node(state: ResearchState) -> dict:
     llm = get_llm()
     prompt = ANALYSIS_PROMPT.format(query=state["query"], evidence=state.get("evidence", ""))
     response = llm.invoke(prompt)
-    return {"analysis": response.content}
+    return {"analysis": extract_text(response)}
