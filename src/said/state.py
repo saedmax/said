@@ -6,6 +6,8 @@ from typing import Annotated, TypedDict
 
 class ResearchState(TypedDict, total=False):
     query: str
+    run_id: str
+    prior_context: str
     web_results: Annotated[list[dict], operator.add]
     paper_results: Annotated[list[dict], operator.add]
     patent_results: Annotated[list[dict], operator.add]

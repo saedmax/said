@@ -6,6 +6,9 @@ V1 عملية تركّز على دورة البحث الكاملة: **بحث →
 ## المعمارية
 
 ```
+Recall Agent            (بحث دلالي عن أبحاث سابقة ذات صلة — Chroma)
+       │
+       ▼
 Research Manager
        │
        ├── Web Research Agent        (DuckDuckGo)
@@ -13,7 +16,10 @@ Research Manager
        └── Patent Agent              (Google Patents عبر SerpApi — اختياري)
                     │
                     ▼
-             Evidence Agent          (تنظيف وتحقق وإزالة التكرار)
+             Evidence Agent          (تنظيف وتحقق وإزالة التكرار، بالإضافة لسياق الأبحاث السابقة)
+                    │
+                    ▼
+             Memory Agent            (تخزين نتائج هذي التشغيلة بالـ vector store لتشغيلات لاحقة)
                     │
                     ▼
              Analysis Agent          (تحليل بنيوي: نتائج، تناقضات، فجوات)
@@ -25,6 +31,12 @@ Research Manager
 كل شيء مبني على [LangGraph](https://github.com/langchain-ai/langgraph) ويستخدم
 **Gemini API** (عبر `langchain-google-genai`) كمحرك تفكير للوكلاء. لا حاجة لتشغيل أي
 نموذج محليًا في V1.
+
+**الذاكرة الدلالية (Chroma):** كل تشغيلة تخزّن نتائجها الخام (عناوين + ملخصات) بـ
+vector store محلي (`data/chroma`، عبر [Chroma](https://www.trychroma.com/)). التشغيلات
+الجاية تسحب أوتوماتيكيًا أي نتائج سابقة ذات صلة دلاليًا وتمررها لـ Evidence Agent كسياق —
+يعني الأبحاث تتراكم بدل ما تبدأ من الصفر كل مرة. أول تشغيلة فيها تحميل لموديل embedding
+صغير (~80MB، مرة وحدة، يتكاش محليًا).
 
 ## المتطلبات
 
@@ -77,7 +89,8 @@ uv run said "الأسمدة النانوية لتحسين امتصاص الني�
 uv run said "..." -o report.md
 ```
 
-كل تشغيلة تُحفظ أيضًا في `data/research.db` (SQLite) لسهولة الرجوع إليها لاحقًا.
+كل تشغيلة تُحفظ أيضًا في `data/research.db` (SQLite) لسهولة الرجوع إليها لاحقًا، وتُضاف
+نتائجها الخام لـ `data/chroma` (vector store) للبحث الدلالي في التشغيلات القادمة.
 
 ## التشغيل بدون uv
 
@@ -96,8 +109,6 @@ uv run pytest
 
 ## حدود V1 والخطوات القادمة (V2)
 
-- لا يوجد Vector DB (Chroma/FAISS) بعد للبحث الدلالي داخل الأبحاث المخزّنة — SQLite فقط
-  حاليًا.
 - Patent Agent يحتاج `SERPAPI_API_KEY` ليعمل فعليًا؛ بدونه هو stub.
 - لا واجهة ويب بعد (CLI فقط).
 - لا Chemistry automation أو تنفيذ تجارب حقيقية — يُضاف تدريجيًا بعد أن يصبح خط
