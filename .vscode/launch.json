@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "said: run query",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "said.cli",
+            "args": ["${input:query}"],
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "query",
+            "type": "promptString",
+            "description": "Research query"
+        }
+    ]
+}
