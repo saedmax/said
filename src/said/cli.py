@@ -6,7 +6,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 from said.graph import build_graph  # noqa: E402
 from said.storage.db import save_run  # noqa: E402
