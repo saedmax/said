@@ -1,7 +1,8 @@
-"""SQLite storage for research runs (V1 research database).
+"""SQLite storage for research runs.
 
-A vector store (Chroma/FAISS) for semantic search over past runs is planned
-for V2 and intentionally left out of this V1 storage layer.
+Semantic search over past runs lives separately in
+`said.storage.vectorstore` (Chroma); this module just keeps the full
+state of every run for exact lookup and display.
 """
 
 import json
@@ -36,3 +37,24 @@ def save_run(query: str, state: dict) -> int:
             (query, datetime.now(timezone.utc).isoformat(), json.dumps(state, default=str)),
         )
         return cur.lastrowid
+
+
+def list_runs(limit: int = 50) -> list[dict]:
+    conn = _connect()
+    rows = conn.execute(
+        "SELECT id, query, created_at FROM runs ORDER BY id DESC LIMIT ?",
+        (limit,),
+    ).fetchall()
+    return [{"id": r[0], "query": r[1], "created_at": r[2]} for r in rows]
+
+
+def get_run(run_id: int) -> dict | None:
+    conn = _connect()
+    row = conn.execute(
+        "SELECT query, created_at, state_json FROM runs WHERE id = ?",
+        (run_id,),
+    ).fetchone()
+    if row is None:
+        return None
+    query, created_at, state_json = row
+    return {"query": query, "created_at": created_at, "state": json.loads(state_json)}

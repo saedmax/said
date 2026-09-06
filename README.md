@@ -98,6 +98,15 @@ uv run said "..." -o report.md
 python -m said.cli "your query"
 ```
 
+## واجهة الويب
+
+```bash
+uv run streamlit run src/said/webapp.py
+```
+
+يفتح على `http://localhost:8501`: مربع نص للسؤال، زر "ابدأ البحث"، وقائمة جانبية بكل
+التشغيلات السابقة (من SQLite) تقدر تفتحها وتشوف تقريرها بدون ما تعيد البحث.
+
 ## الاختبارات
 
 ```bash
@@ -110,6 +119,5 @@ uv run pytest
 ## حدود V1 والخطوات القادمة (V2)
 
 - Patent Agent يحتاج `SERPAPI_API_KEY` ليعمل فعليًا؛ بدونه هو stub.
-- لا واجهة ويب بعد (CLI فقط).
 - لا Chemistry automation أو تنفيذ تجارب حقيقية — يُضاف تدريجيًا بعد أن يصبح خط
   البحث/التحليل/التقرير قويًا.
