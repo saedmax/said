@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="Learn English sentences by swapping word tiles, with Arabic translation and pronunciation." />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'" />
 <title>Sentence Builder — Learn English Sentences</title>
 <link rel="stylesheet" href="styles.css" />
 </head>
@@ -15,20 +17,22 @@
 
     <nav class="sentence-tabs" id="sentenceTabs" role="tablist" aria-label="Choose a sentence"></nav>
 
-    <main class="card">
+    <main class="card" id="sentencePanel" role="tabpanel" aria-label="Sentence builder">
       <section class="tiles" id="tiles" aria-label="Sentence word tiles"></section>
 
-      <p class="preview" id="preview"></p>
+      <p class="preview" id="preview" aria-live="polite"></p>
 
       <section class="scene" id="scene" aria-label="Illustration of the current sentence"></section>
 
-      <section class="translation" id="translation" dir="rtl" lang="ar" aria-label="Arabic translation"></section>
+      <section class="translation" id="translation" dir="rtl" lang="ar" aria-label="Arabic translation" aria-live="polite"></section>
+
+      <p class="status" id="status" role="status" hidden></p>
 
       <div class="actions">
-        <button id="speakBtn" class="icon-btn" title="Play sentence" aria-label="Play sentence">🔊 Listen</button>
-        <button id="slowBtn" class="icon-btn" title="Toggle slow, clearer pronunciation" aria-label="Toggle slow pronunciation" aria-pressed="false">🐢 Slow</button>
-        <button id="shuffleBtn" class="icon-btn" title="Randomize words" aria-label="Randomize words">🎲 Shuffle</button>
-        <button id="resetBtn" class="icon-btn" title="Reset to original" aria-label="Reset to original">↺ Reset</button>
+        <button type="button" id="speakBtn" class="icon-btn" title="Play sentence" aria-label="Play sentence">🔊 Listen</button>
+        <button type="button" id="slowBtn" class="icon-btn" title="Toggle slow, clearer pronunciation" aria-label="Toggle slow pronunciation" aria-pressed="false">🐢 Slow</button>
+        <button type="button" id="shuffleBtn" class="icon-btn" title="Randomize words" aria-label="Randomize words">🎲 Shuffle</button>
+        <button type="button" id="resetBtn" class="icon-btn" title="Reset to original" aria-label="Reset to original">↺ Reset</button>
       </div>
     </main>
 
