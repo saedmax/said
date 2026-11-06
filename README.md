@@ -30,3 +30,16 @@ Add an entry to the `SENTENCES` array in `app.js`: a list of slots (each
 an array of `{ en, ar, icon }` alternatives), a `punctAfter` map for
 inline punctuation, and `joinEN`/`joinAR` functions that assemble the
 final English and Arabic sentences from the selected options.
+
+## Claude Code setup (ECC)
+
+This repo enables the [ECC](https://github.com/affaan-m/ECC) plugin
+(`ecc@ecc`) via `.claude/settings.json`. Claude Code loads its agents,
+skills, commands, and hooks on session start.
+
+Rule packs live in `.claude/rules/ecc/`:
+
+- `common/` — workflow, testing, security, git rules
+- `web/` — frontend style, design, performance rules
+
+Remove the `enabledPlugins` entry to disable ECC.
